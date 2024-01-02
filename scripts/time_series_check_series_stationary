@@ -68,5 +68,34 @@ dtype: float64
 
 
 '''
+def kpss_test(timeseries):
+    print ('Results of KPSS Test:')
+    kpsstest = kpss(timeseries, regression='c')
+    kpss_output = pd.Series(kpsstest[0:3], index=['Test Statistic','p-value','Lags Used'])
+    for key,value in kpsstest[3].items():
+        kpss_output['Critical Value (%s)'%key] = value
+    print (kpss_output)
+
+kpss_test(train_data['count'])
+
+'''
+Test Statistic            3.528422
+p-value                   0.010000
+Lags Used                15.000000
+Critical Value (10%)      0.347000
+Critical Value (5%)       0.463000
+Critical Value (2.5%)     0.574000
+Critical Value (1%)       0.739000
+dtype: float64
+
+- If the test statistic is greater than the critical value, we reject the null hypothesis (concluding series is not stationary).
+
+- If the test statistic is less than the critical value, if fail to reject the null hypothesis (series is trend stationary).  
+
+**Here test statistic is > than critical. Hence series is not stationary**
+
+'''
+
+
 
 
