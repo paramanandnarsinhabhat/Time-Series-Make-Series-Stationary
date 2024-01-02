@@ -15,3 +15,38 @@ valid_data = pd.read_csv("/Users/paramanandbhat/Downloads/6.4_Stationarity_for_t
 print(train_data.shape)
 print(train_data.head())
 
+print(valid_data.shape)
+print(valid_data.head())
+
+#Required PreProcessing 
+train_data.timestamp = pd.to_datetime(train_data['Date'],format='%Y-%m-%d')
+train_data.index = train_data.timestamp
+
+valid_data.timestamp = pd.to_datetime(valid_data['Date'],format='%Y-%m-%d')
+valid_data.index = valid_data.timestamp
+
+plt.figure(figsize=(12,8))
+
+plt.plot(train_data.index, train_data['count'], label='train_data')
+plt.plot(valid_data.index, valid_data['count'], label='valid')
+plt.legend(loc='best')
+plt.title("Train and Validation Data")
+plt.show()
+
+# dickey fuller, kpss
+from statsmodels.tsa.stattools import adfuller, kpss
+
+def adf_test(timeseries):
+    
+    #Perform Dickey-Fuller test:
+    print ('Results of Dickey-Fuller Test:')
+    dftest = adfuller(timeseries, autolag='AIC')
+    dfoutput=pd.Series(dftest[0:4], index=['Test Statistic','p-value','#Lags Used','Number of Observations Used'])
+
+    for key,value in dftest[4].items():
+        dfoutput['Critical Value (%s)'%key] = value
+    print (dfoutput)
+
+
+adf_test(train_data['count'])
+
