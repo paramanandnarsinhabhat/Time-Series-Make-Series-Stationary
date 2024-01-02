@@ -96,6 +96,48 @@ dtype: float64
 
 '''
 
+#Make series stationary
+train_data['count_diff'] = train_data['count'] - train_data['count'].shift(1)
 
+plt.figure(figsize=(12,8))
 
+plt.plot(train_data.index, train_data['count'], label='train_data')
+plt.plot(train_data.index,train_data['count_diff'], label='stationary series')
+plt.legend(loc='best')
+plt.title("Stationary Series")
+plt.show()
+
+train_data['count_log'] = np.log(train_data['count'])
+train_data['count_log_diff'] = train_data['count_log'] - train_data['count_log'].shift(1)
+
+plt.figure(figsize=(12,8))
+
+plt.plot(train_data.index,train_data['count_log_diff'], label='stationary series')
+plt.legend(loc='best')
+plt.title("Stationary Series")
+plt.show()
+
+adf_test(train_data['count_log_diff'].dropna())
+'''
+Results of Dickey-Fuller Test:
+Test Statistic                -7.500565e+00
+p-value                        4.264600e-11
+#Lags Used                     1.900000e+01
+Number of Observations Used    5.570000e+02
+Critical Value (1%)           -3.442145e+00
+Critical Value (5%)           -2.866743e+00
+Critical Value (10%)          -2.569541e+00
+'''
+kpss_test(train_data['count_log_diff'].dropna())
+
+'''
+Test Statistic            0.110212
+p-value                   0.100000
+Lags Used                57.000000
+Critical Value (10%)      0.347000
+Critical Value (5%)       0.463000
+Critical Value (2.5%)     0.574000
+Critical Value (1%)       0.739000
+
+'''
 
